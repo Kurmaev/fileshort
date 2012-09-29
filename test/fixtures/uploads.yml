@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  id: 1
+  slug: MyString
+  filepath: MyString
+  extension: MyString
+  original_name: MyString
+  pwd: MyString
+  salt: MyString
+
+two:
+  id: 1
+  slug: MyString
+  filepath: MyString
+  extension: MyString
+  original_name: MyString
+  pwd: MyString
+  salt: MyString

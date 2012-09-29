@@ -1,0 +1,7 @@
+<h1><%= @upload.original_name %></h1>
+<%= link_to(
+      'Download file',
+      {:controller => :upload, :action => :download, :id => @upload.id},
+      {:class => 'btn btn-primary'}
+    )
+%>
