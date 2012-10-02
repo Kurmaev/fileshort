@@ -1,0 +1,19 @@
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Filename</th>
+      <th>Extension</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+ 
+<% @uploads.each do |upload| %>
+  <tr>
+    <td><%= upload.original_name %></td>
+    <td><%= upload.extension %></td>
+    <td><%= link_to 'Show', :action => :view, :id => upload.slug %></td>
+    <td><%= link_to 'Remove', :action => :delete, :id => upload.id %></td>
+  </tr>
+<% end %>
+</table>
