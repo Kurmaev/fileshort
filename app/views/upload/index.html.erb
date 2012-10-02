@@ -1,29 +1,15 @@
-<div class="hero-unit">
+<div class="hero-unit" id="upload-form">
   <h1>FileShort</h1>
-  <p>Upload your files and share it for your friends!</p>
+  <p>Upload your files and share it with your friends!</p>
 
-  <%= form_for :upload, :url => { :action => :create }, :html => { :class => "form-search"} do |f| %>
-    <%= f.file_field :original_name, :class => "input-medium search-query" %>
-    <%= f.submit :class => "btn" %>
-  <% end %>
+  <div class="bordered-dashed upload-zone">
+    <span>Drop your file here or click for choose it from dialog window</span>
+    <%= form_for :upload, :url => { :action => :create }, :html => { :class => "form-search"} do |f| %>
+      <%= f.file_field :original_name, :class => "input-medium search-query" %>
+    <% end %>
+  </div>
+
+  <div class="progress progress-striped active hidden">
+    <div class="bar" style="width: 0%;"></div>
+  </div>
 </div>
-
-<table class="table table-bordered table-striped">
-  <thead>
-    <tr>
-      <th>Filename</th>
-      <th>Extension</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
- 
-<% @uploads.each do |upload| %>
-  <tr>
-    <td><%= upload.original_name %></td>
-    <td><%= upload.extension %></td>
-    <td><%= link_to 'Show', :action => :view, :id => upload.id %></td>
-    <td><%= link_to 'Remove', :action => :delete, :id => upload.id %></td>
-  </tr>
-<% end %>
-</table>

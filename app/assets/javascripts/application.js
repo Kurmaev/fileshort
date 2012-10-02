@@ -13,3 +13,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+Array.prototype.last = function() {return this[this.length-1];}

@@ -26,6 +26,13 @@
           <span class="icon-bar"></span>
         </a>
         <a class="brand" href="/">FileShort</a>
+        <% if @image == true %>
+          <ul class="nav pull-right">
+            <li>
+              <%= link_to('Direct link to download', "/data/"+@upload.filepath) %>
+            </li>
+          </ul>
+        <% end %>
       </div>
     </div>
   </div>

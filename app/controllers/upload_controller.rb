@@ -1,35 +1,38 @@
 class UploadController < ApplicationController
   def index
-    @uploads = Upload.all()
   end
 
   def create
-    original_filename = params[:upload][:original_name].original_filename
-    @upload = Upload.new(:original_name => original_filename)
-    @upload.save
+    if params[:upload].nil?
+      redirect_to :action => :index
+    else
+      original_filename = params[:upload][:original_name].original_filename
+      @upload = Upload.new(:original_name => original_filename)
+      @upload.save
+      id = @upload.id.to_s(16)
+      extension = params[:upload][:original_name].original_filename.split('.').last
 
-    id = @upload.id.to_s(16)
-    extension = params[:upload][:original_name].original_filename.split('.').last
+      name      =  id+'.'+extension
+      directory = "public/data"
+      path = File.join(directory, name)
+      File.open(path, "wb") { |f| f.write(params[:upload][:original_name].read) }
 
-    name      =  id+'.'+extension
-    directory = "public/data"
-    path = File.join(directory, name)
-    File.open(path, "wb") { |f| f.write(params[:upload][:original_name].read) }
+      @upload.update_attributes(:slug => id, :extension => extension, :filepath => name)
 
-    @upload.update_attributes(:slug => id, :extension => extension, :filepath => name)
-
-    redirect_to :action => :view, :id => @upload.id
+      render :text => id
+    end
   end
 
   def view
-    @upload = Upload.find(params[:id])
-    if @upload.extension == 'jpeg' || @upload.extension == 'png'
+    @upload = Upload.find_by_slug(params[:id])
+    if @upload.extension == 'jpeg' || @upload.extension == 'png' || @upload.extension == 'jpg' || @upload.extension == 'gif'
+      @image = true
       render 'view_image'
     end
   end
 
   def download
-    @upload = Upload.find(params[:id])
+    @upload = Upload.find_by_slug(params[:id])
     send_file('public/data/'+@upload.filepath, {:filename => @upload.original_name})
   end
 
@@ -38,6 +41,10 @@ class UploadController < ApplicationController
     File.delete("public/data/"+@upload.filepath) 
     @upload.destroy
    
-    redirect_to :action => :index
+    redirect_to :action => :files
+  end
+
+  def files
+    @uploads = Upload.all()
   end
 end
