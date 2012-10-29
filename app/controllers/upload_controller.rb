@@ -3,24 +3,35 @@ class UploadController < ApplicationController
   end
 
   def create
-    if params[:upload].nil?
-      redirect_to :action => :index
-    else
+    if params[:upload].present?
       original_filename = params[:upload][:original_name].original_filename
+      extension = params[:upload][:original_name].original_filename.split('.').last
+      to_write = params[:upload][:original_name].read
+    elsif params[:base64].present?
+      original_filename = Time.now.strftime("%Y%m%d%H%M%S%L")
+      extension = "png"
+      to_write = Base64.decode64(params[:base64].split(',').last)
+    else
+      if request.xhr?
+        render :json => { "status" => "error" }
+      else
+        redirect_to :action => :index
+      end
+      return
+    end
+
       @upload = Upload.new(:original_name => original_filename)
       @upload.save
       id = @upload.id.to_s(16)
-      extension = params[:upload][:original_name].original_filename.split('.').last
-
       name      =  id+'.'+extension
+
       directory = "public/data"
       path = File.join(directory, name)
-      File.open(path, "wb") { |f| f.write(params[:upload][:original_name].read) }
 
+      File.open(path, "wb") { |f| f.write(to_write) }
       @upload.update_attributes(:slug => id, :extension => extension, :filepath => name)
 
       render :text => id
-    end
   end
 
   def view
